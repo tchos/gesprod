@@ -21,7 +21,7 @@ public class Produit {
     @GeneratedValue
     private UUID idProduit;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     @Size(min = 3, max = 48, message = "{Size.produit.nomProduit}")
     private String nomProduit;
 
