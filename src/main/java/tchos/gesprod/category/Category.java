@@ -1,5 +1,6 @@
 package tchos.gesprod.category;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.*;
@@ -26,6 +27,7 @@ public class Category {
     private String nomCategory;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties("category")
     private List<Produit> produits;
 
 }

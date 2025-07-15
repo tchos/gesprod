@@ -2,6 +2,7 @@ package tchos.gesprod.produit;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import tchos.gesprod.category.CategoryRepository;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -13,17 +14,8 @@ import java.util.stream.Collectors;
 public class ProduitService {
 
     private final ProduitRepository produitRepository;
-
-    // Conversion de Produit en ProduitDTO
-    public ProduitDTO mapToDTO(Produit produit) {
-        return new ProduitDTO(
-                produit.getIdProduit(),
-                produit.getNomProduit(),
-                produit.getPrixProduit(),
-                isPerime(produit.getDateExpiration()),
-                produit.getCategory().getNomCategory()
-        );
-    }
+    private final ProduitMapper produitMapper;
+    private final CategoryRepository categoryRepository;
 
     private static Boolean isPerime(LocalDate dateExpiration) {
         return dateExpiration.isBefore(LocalDate.now());
@@ -33,7 +25,7 @@ public class ProduitService {
     public List<ProduitDTO> getAllProduits() {
         return produitRepository.findAll()
                 .stream()
-                .map(this::mapToDTO)
+                .map(produitMapper::toDTO)
                 .collect(Collectors.toList());
     }
 
@@ -41,7 +33,7 @@ public class ProduitService {
     public ProduitDTO getProduitDTOById(UUID id) {
         Produit produit =  produitRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Produit non existant !"));
-        return mapToDTO(produit);
+        return produitMapper.toDTO(produit);
     }
 
     // Recupérer un produit à partir de son id
@@ -51,24 +43,36 @@ public class ProduitService {
         return produit;
     }
 
-    // Enregistrer un nouveau produit
-    public Produit createProduit(Produit produit) {
+    // Enregistrer un nouveau produit à partir d'un DTO
+    public ProduitDTO createProduit(ProduitDTO produitDTO) {
         // Verifie si la catégorie existe déjà
-        if(produitRepository.existsDistinctByNomProduit(produit.getNomProduit())) {
+        if(produitRepository.existsDistinctByNomProduit(produitDTO.getNomProduit())) {
             throw new IllegalArgumentException("Ce produit existe déjà en BD !");
         }
-        return produitRepository.save(produit);
+
+        Produit produit = produitMapper.toEntity(produitDTO);
+        Produit savedProduit = produitRepository.save(produit);
+        return produitMapper.toDTO(savedProduit);
     }
 
     /* Mettre à jour les informations sur un
         produit (existingProduit) déja existant */
-    public Produit updateProduit(UUID id, Produit updatedProduit) {
+    public ProduitDTO updateProduit(UUID id, ProduitDTO updatedProduitDTO) {
         return produitRepository.findById(id).map(
                 existingProduit->{
-                    existingProduit.setNomProduit(updatedProduit.getNomProduit());
-                    existingProduit.setPrixProduit(updatedProduit.getPrixProduit());
-                    existingProduit.setDateExpiration(updatedProduit.getDateExpiration());
-                    return produitRepository.save(existingProduit);
+                    existingProduit.setNomProduit(updatedProduitDTO.getNomProduit());
+                    existingProduit.setPrixProduit(updatedProduitDTO.getPrixProduit());
+                    existingProduit.setDateExpiration(updatedProduitDTO.getDateExpiration());
+
+                    // Mise à jour éventuelle de la catégorie
+                    if (updatedProduitDTO.getCategoryId() != null) {
+                        existingProduit.setCategory(
+                                categoryRepository.findById(updatedProduitDTO.getCategoryId())
+                                        .orElseThrow(() -> new IllegalArgumentException("Catégorie non existante !"))
+                        );
+                    }
+
+                    return produitMapper.toDTO(produitRepository.save(existingProduit));
                 }
         ).orElseThrow(() -> new IllegalArgumentException("Produit non existant !"));
     }
@@ -79,5 +83,19 @@ public class ProduitService {
             throw new IllegalArgumentException("Produit non existant !");
         }
         produitRepository.deleteById(id);
+    }
+
+    // Liste des produits périmés
+    public List<ProduitDTO> getProduitsPerimes() {
+        return produitRepository.findAll().stream()
+                .filter(p -> isPerime(p.getDateExpiration()))
+                .map(produitMapper::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    // Liste des produits par categorie
+    public List<ProduitDTO> getProduitsByCategory(UUID categoryId) {
+        List<Produit> produits = produitRepository.findByCategory(categoryId);
+        return produits.stream().map(produitMapper::toDTO).collect(Collectors.toList());
     }
 }

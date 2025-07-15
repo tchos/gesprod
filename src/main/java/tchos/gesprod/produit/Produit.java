@@ -1,5 +1,6 @@
 package tchos.gesprod.produit;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
@@ -36,5 +37,6 @@ public class Produit {
 
     @ManyToOne
     @JoinColumn(name = "category")
+    @JsonIgnoreProperties("produits")
     private Category category;
 }

@@ -1,5 +1,7 @@
 package tchos.gesprod.category;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +13,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/categories")
 @RequiredArgsConstructor
+@Tag(name = "Catégories", description = "API pour la gestion des catégories")
 public class CategoryController {
 
     private final CategoryService categoryService;
@@ -23,27 +26,34 @@ public class CategoryController {
 
     // Liste de toutes les catégorie
     @GetMapping
-    public ResponseEntity<List<Category>> getAllCategories() {
+    @Operation(summary = "Liste de toutes les catégories")
+    public ResponseEntity<List<CategoryDTO>> getAllCategories() {
         return ResponseEntity.ok(categoryService.getAllCategories());
     }
 
     // Recuperer une catégorie à partir de son ID
     @GetMapping("/{id}")
-    public ResponseEntity<Category> getCategoryById(@PathVariable UUID id) {
+    @Operation(summary = "Obtenir une catégorie via son ID")
+    public ResponseEntity<CategoryDTO> getCategoryById(@PathVariable UUID id) {
         return ResponseEntity.ok(categoryService.getCategoryByID(id));
     }
 
+    // Enregistrer une nouvelle catégorie
     @PostMapping
-    public ResponseEntity<Category> createCategory(@RequestBody Category category) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(categoryService.createCategory(category));
+    @Operation(summary = "Enregistrer une nouvelle catégorie")
+    public ResponseEntity<CategoryDTO> createCategory(@RequestBody CategoryDTO categoryDTO) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(categoryService.createCategory(categoryDTO));
     }
 
+    // Mettre à jour une catégorie existante
     @PutMapping("/{id}")
-    public ResponseEntity<Category> updateCategory(@PathVariable UUID id, @RequestBody Category category) {
-        return ResponseEntity.ok(categoryService.updateCategory(id, category));
+    @Operation(summary = "Mettre à jour une catégorie existante")
+    public ResponseEntity<CategoryDTO> updateCategory(@PathVariable UUID id, @RequestBody CategoryDTO categoryDTO) {
+        return ResponseEntity.ok(categoryService.updateCategory(id, categoryDTO));
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "Supprimer une catégorie")
     public ResponseEntity<Void> deleteCategory(@PathVariable UUID id) {
         categoryService.deleteCategory(id);
         return ResponseEntity.noContent().build();

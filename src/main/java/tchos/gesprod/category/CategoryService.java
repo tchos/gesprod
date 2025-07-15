@@ -6,40 +6,51 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
+    private final CategoryMapper categoryMapper;
 
     // Liste des catégories
-    public List<Category> getAllCategories() {
-        return categoryRepository.findAll();
+    public List<CategoryDTO> getAllCategories() {
+        return categoryRepository.findAll()
+                .stream()
+                .map(categoryMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
     // Recupere une catégorie par son ID
-    public Category getCategoryByID(UUID id) {
-        return categoryRepository.findById(id)
+    public CategoryDTO getCategoryByID(UUID id) {
+        Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Categorie non existente !"));
+        return categoryMapper.toDTO(category);
     }
 
     // Créer une nouvelle catégorie
-    public Category createCategory(Category category) {
+    public CategoryDTO createCategory(CategoryDTO categoryDTO) {
         // Verifie si la catégorie existe déjà
-        if(categoryRepository.existsDistinctByNomCategory(category.getNomCategory())) {
+        if(categoryRepository.existsDistinctByNomCategory(categoryDTO.getNomCategory())) {
             throw new IllegalArgumentException("Cette catégorie existe déjà !");
         }
-        return categoryRepository.save(category);
+
+        Category category = categoryMapper.toEntity(categoryDTO);
+        Category savedCategory = categoryRepository.save(category);
+        return categoryMapper.toDTO(savedCategory);
     }
 
     /* Mettre à jour les informations sur une
         catégorie (existingCategory) déja existante */
-    public Category updateCategory(UUID id, Category updatedCategory) {
+    public CategoryDTO updateCategory(UUID id, CategoryDTO updatedCategoryDTO) {
         return categoryRepository.findById(id).map(
                 existingCategory->{
-                    existingCategory.setNomCategory(updatedCategory.getNomCategory());
-                    return categoryRepository.save(existingCategory);
+                    existingCategory.setNomCategory(updatedCategoryDTO.getNomCategory());
+
+                    Category updatedCategory = categoryMapper.toEntity(updatedCategoryDTO);
+                    return categoryMapper.toDTO(updatedCategory);
                 }
         ).orElseThrow(() -> new IllegalArgumentException("Categorie non existente !"));
     }
