@@ -30,43 +30,77 @@ public class ProduitController {
 
     // Liste de tous les produits
     @GetMapping
-    @Operation(summary = "Liste de tous les produits")
+    @Operation(
+            summary = "Liste de tous les produits",
+            description = "Cette méthode vous permet de voir la liste de tous les produits qui existent",
+            operationId = "getAllProduits",
+            tags = {"Produits"},
+            responses = {
+                    @ApiResponse(responseCode = "201", description = "Succès")
+            }
+    )
     public ResponseEntity<List<ProduitDTO>> getAllProduits() {
        return ResponseEntity.ok(produitService.getAllProduits());
     }
 
     // Recupérer un produitDTO à partir de son ID
     @GetMapping("/{id}")
-    @Operation(summary = "Obtenir un produit par son ID")
+    @Operation(
+            summary = "Obtenir un produit par son ID",
+            description = "Cette méthode vous permet de voir la liste de tous les produits qui existent",
+            operationId = "getAllProduits",
+            tags = {"Produits"},
+            responses = {
+                    @ApiResponse(responseCode = "201", description = "Succès")
+            }
+    )
     public ResponseEntity<ProduitDTO> getProduitDTOById(@PathVariable UUID id) {
         return ResponseEntity.ok(produitService.getProduitDTOById(id));
     }
 
     // Créer un nouveau produit
     @PostMapping
-    @Operation(summary = "Créer un nouveau produit")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Produit créé avec succès !"),
-            @ApiResponse(responseCode = "400", description = "Ce produit existe déjà en BD !")
-    })
+    @Operation(
+            summary = "Créer un nouveau produit",
+            description = "Cette méthode vous permet d'enregistrer un nouveau produit en base de données",
+            operationId = "addProduit",
+            tags = {"Produits"},
+            responses = {
+                    @ApiResponse(responseCode = "201", description = "Produit enregistré avec succès"),
+                    @ApiResponse(responseCode = "400", description = "Ce produit existe déjà en BD !")
+            }
+    )
     public ResponseEntity<ProduitDTO> addProduit(@Valid @RequestBody ProduitDTO produitDTO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(produitService.createProduit(produitDTO));
     }
 
     // Mettre à jour produit
     @PutMapping("/{id}")
-    @Operation(summary = "Mettre à jour un produit existant")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Produit mis à jour avec succès !"),
-            @ApiResponse(responseCode = "400", description = "Ce produit existe déjà en BD !")
-    })
+    @Operation(
+            summary = "Mettre à jour un produit existant",
+            description = "Cette méthode vous permet de modifier les informations d'un produit déjà existant",
+            operationId = "updateProduit",
+            tags = {"Produits"},
+            responses = {
+                    @ApiResponse(responseCode = "201", description = "Produit mis à jour avec succès !"),
+                    @ApiResponse(responseCode = "400", description = "Ce produit existe déjà en BD !")
+            }
+    )
     public ResponseEntity<ProduitDTO> updateProduit(@PathVariable UUID id, @Valid @RequestBody ProduitDTO produitDTO) {
         return ResponseEntity.ok(produitService.updateProduit(id, produitDTO));
     }
 
     // Supprimer un produit connaissant son ID
     @DeleteMapping("/{id}")
-    @Operation(summary = "Supprimer un produit existant")
+    @Operation(
+            summary = "Supprimer un produit existant",
+            description = "Cette méthode vous permet de supprimer de la base de données un produit",
+            operationId = "deleteProduit",
+            tags = {"Produits"},
+            responses = {
+                    @ApiResponse(responseCode = "201", description = "Produit supprimé de la base de données avec succès !")
+            }
+    )
     public ResponseEntity<Void> deleteProduit(@PathVariable UUID id) {
         produitService.deleteProduit(id);
         return ResponseEntity.noContent().build();
@@ -74,14 +108,30 @@ public class ProduitController {
 
     // Liste des produits périmés
     @GetMapping("/perimes")
-    @Operation(summary = "Obtenir la liste des produits périmés")
+    @Operation(
+            summary = "Obtenir la liste des produits périmés",
+            description = "Cette méthode vous permet de voir la liste de tous les produits qui sont périmés",
+            operationId = "getProduitsPerimes",
+            tags = {"Produits"},
+            responses = {
+                    @ApiResponse(responseCode = "201", description = "Succès")
+            }
+    )
     public List<ProduitDTO> getProduitsPerimes() {
         return produitService.getProduitsPerimes();
     }
 
     // Liste des produits par catégorie
     @GetMapping("/list/categorie/{id}")
-    @Operation(summary = "Liste des produits par catégorie")
+    @Operation(
+            summary = "Liste des produits par catégorie",
+            description = "Cette méthode vous permet de voir la liste de tous les produits qui existent selon une catégorie renseignée",
+            operationId = "getProduitsByCategory",
+            tags = {"Produits"},
+            responses = {
+                    @ApiResponse(responseCode = "201", description = "Succès")
+            }
+    )
     public List<ProduitDTO> getProduitsByCategory(@PathVariable UUID id) {
         return produitService.getProduitsByCategory(id);
     }

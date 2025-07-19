@@ -29,25 +29,46 @@ public class CategoryController {
 
     // Liste de toutes les catégorie
     @GetMapping
-    @Operation(summary = "Liste de toutes les catégories")
+    @Operation(
+            summary = "Liste de toutes les catégories",
+            description = "Cette méthode vous permet de lister toutes les catégories de produit qui existent",
+            operationId = "getAllCategories",
+            tags = {"Catégories"},
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Succès")
+            }
+    )
     public ResponseEntity<List<CategoryDTO>> getAllCategories() {
         return ResponseEntity.ok(categoryService.getAllCategories());
     }
 
     // Recuperer une catégorie à partir de son ID
     @GetMapping("/{id}")
-    @Operation(summary = "Obtenir une catégorie via son ID")
+    @Operation(
+            summary = "Obtenir une catégorie via son ID",
+            description = "Cette méthode vous permet de rechercher une catégorie à partir de son identifiant",
+            operationId = "getCategoryById",
+            tags = {"Catégories"},
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Succès")
+            }
+    )
     public ResponseEntity<CategoryDTO> getCategoryById(@PathVariable UUID id) {
         return ResponseEntity.ok(categoryService.getCategoryByID(id));
     }
 
     // Enregistrer une nouvelle catégorie
     @PostMapping
-    @Operation(summary = "Enregistrer une nouvelle catégorie")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Catégorie créée avec succès"),
-            @ApiResponse(responseCode = "400", description = "Catégorie déjà existante")
-    })
+    @Operation(
+            summary = "Enregistrer une nouvelle catégorie",
+            description = "Cette fonction vous permet d'enregistrer une nouvelle catégorie en base de données ",
+            operationId = "createCategory",
+            tags = {"Catégories"},
+            responses = {
+                    @ApiResponse(responseCode = "201", description = "Catégorie créée avec succès"),
+                    @ApiResponse(responseCode = "400", description = "Catégorie déjà existante")
+            }
+    )
     public ResponseEntity<Category> createCategory(@Valid @RequestBody CategoryDTO categoryDTO) {
         Category created = categoryService.createCategoryWithBuilder(categoryDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
@@ -55,17 +76,31 @@ public class CategoryController {
 
     // Mettre à jour une catégorie existante
     @PutMapping("/{id}")
-    @Operation(summary = "Mettre à jour une catégorie existante")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Catégorie mise à jour avec succès"),
-            @ApiResponse(responseCode = "400", description = "Catégorie déjà existante")
-    })
+    @Operation(
+            summary = "Mettre à jour une catégorie existante",
+            description = "Cette fonction vous permet de modifier les informations d'une catégorie déjà existante",
+            operationId = "updateCategory",
+            tags = {"Catégories"},
+            responses = {
+                    @ApiResponse(responseCode = "201", description = "Catégorie mise à jour avec succès"),
+                    @ApiResponse(responseCode = "400", description = "Catégorie déjà existante")
+            }
+    )
     public ResponseEntity<CategoryDTO> updateCategory(@PathVariable UUID id, @Valid @RequestBody CategoryDTO categoryDTO) {
         return ResponseEntity.ok(categoryService.updateCategory(id, categoryDTO));
     }
 
     @DeleteMapping("/{id}")
-    @Operation(summary = "Supprimer une catégorie")
+    @Operation(
+            summary = "Supprimer une catégorie",
+            description = "Cette fonction vous permet de supprimer de la base de données les informations d'une catégorie déjà existante",
+            operationId = "deleteCategory",
+            tags = {"Catégories"},
+            responses = {
+                    @ApiResponse(responseCode = "201", description = "Catégorie supprimée avec succès"),
+                    @ApiResponse(responseCode = "400", description = "Catégorie non existante")
+            }
+    )
     public ResponseEntity<Void> deleteCategory(@PathVariable UUID id) {
         categoryService.deleteCategory(id);
         return ResponseEntity.noContent().build();
