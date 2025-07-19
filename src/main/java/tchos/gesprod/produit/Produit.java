@@ -7,7 +7,6 @@ import lombok.*;
 import tchos.gesprod.category.Category;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -20,7 +19,7 @@ import java.util.UUID;
 public class Produit {
     @Id
     @GeneratedValue
-    private UUID idProduit;
+    private UUID id;
 
     @Column(nullable = false, unique = true)
     @Size(min = 3, max = 48, message = "{Size.produit.nomProduit}")

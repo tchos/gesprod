@@ -11,7 +11,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 public class ProduitDTO {
-    private UUID idProduit;
+    private UUID id;
 
     @Size(min = 3, max = 48, message = "{Size.produit.nomProduit}")
     private String nomProduit;

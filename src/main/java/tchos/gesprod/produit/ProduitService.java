@@ -1,7 +1,10 @@
 package tchos.gesprod.produit;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+import tchos.gesprod.category.Category;
 import tchos.gesprod.category.CategoryRepository;
 
 import java.time.LocalDate;
@@ -45,12 +48,24 @@ public class ProduitService {
 
     // Enregistrer un nouveau produit à partir d'un DTO
     public ProduitDTO createProduit(ProduitDTO produitDTO) {
-        // Verifie si la catégorie existe déjà
-        if(produitRepository.existsDistinctByNomProduit(produitDTO.getNomProduit())) {
-            throw new IllegalArgumentException("Ce produit existe déjà en BD !");
+        // Verifie si le produit existe déjà
+        if(produitRepository.existsByNomProduitIgnoreCase(produitDTO.getNomProduit().trim().toLowerCase())) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Ce produit existe déjà en BD !");
         }
 
-        Produit produit = produitMapper.toEntity(produitDTO);
+        // On recupere la categorie du produit
+        Category category = categoryRepository.findById(produitDTO.getCategoryId())
+                .orElseThrow(() -> new IllegalArgumentException("Category non existante !"));
+
+        // Nouveau produit
+        Produit produit = new Produit();
+        produit.setNomProduit(produitDTO.getNomProduit());
+        produit.setPrixProduit(produitDTO.getPrixProduit());
+        produit.setDateExpiration(produitDTO.getDateExpiration());
+        produit.setCategory(category);
+
         Produit savedProduit = produitRepository.save(produit);
         return produitMapper.toDTO(savedProduit);
     }
@@ -95,7 +110,7 @@ public class ProduitService {
 
     // Liste des produits par categorie
     public List<ProduitDTO> getProduitsByCategory(UUID categoryId) {
-        List<Produit> produits = produitRepository.findByCategory(categoryId);
+        List<Produit> produits = produitRepository.findByCategoryId(categoryId);
         return produits.stream().map(produitMapper::toDTO).collect(Collectors.toList());
     }
 }

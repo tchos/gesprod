@@ -1,6 +1,8 @@
 package tchos.gesprod.produit;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -43,6 +45,10 @@ public class ProduitController {
     // Créer un nouveau produit
     @PostMapping
     @Operation(summary = "Créer un nouveau produit")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Produit créé avec succès !"),
+            @ApiResponse(responseCode = "400", description = "Ce produit existe déjà en BD !")
+    })
     public ResponseEntity<ProduitDTO> addProduit(@Valid @RequestBody ProduitDTO produitDTO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(produitService.createProduit(produitDTO));
     }
@@ -50,6 +56,10 @@ public class ProduitController {
     // Mettre à jour produit
     @PutMapping("/{id}")
     @Operation(summary = "Mettre à jour un produit existant")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Produit mis à jour avec succès !"),
+            @ApiResponse(responseCode = "400", description = "Ce produit existe déjà en BD !")
+    })
     public ResponseEntity<ProduitDTO> updateProduit(@PathVariable UUID id, @Valid @RequestBody ProduitDTO produitDTO) {
         return ResponseEntity.ok(produitService.updateProduit(id, produitDTO));
     }

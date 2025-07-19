@@ -9,14 +9,14 @@ public class CategoryMapper {
 
     public CategoryDTO toDTO(Category category) {
         return CategoryDTO.builder()
-                .idCategory(category.getIdCategory())
+                .id(category.getId())
                 .nomCategory(category.getNomCategory())
                 .build();
     }
 
     public Category toEntity(CategoryDTO categoryDTO) {
         return Category.builder()
-                .idCategory(categoryDTO.getIdCategory())
+                .id(categoryDTO.getId())
                 .nomCategory(categoryDTO.getNomCategory())
                 .build();
     }

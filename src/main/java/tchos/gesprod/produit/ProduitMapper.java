@@ -14,25 +14,27 @@ public class ProduitMapper {
 
     public ProduitDTO toDTO(Produit produit) {
         return ProduitDTO.builder()
-                .idProduit(produit.getIdProduit())
+                .id(produit.getId())
                 .nomProduit(produit.getNomProduit())
                 .prixProduit(produit.getPrixProduit())
                 .dateExpiration(produit.getDateExpiration())
-                .categoryId(produit.getCategory() != null ? produit.getCategory().getIdCategory() : null)
+                .categoryId(produit.getCategory() != null ? produit.getCategory().getId() : null)
                 .build();
     }
 
     public Produit toEntity(ProduitDTO produitDTO) {
-        Category category = produitDTO.getCategoryId() != null
-                ? categoryRepository.findById(produitDTO.getCategoryId()).orElse(null)
-                : null;
+        Produit produit = new Produit();
+        produit.setId(produitDTO.getId());
+        produit.setNomProduit(produitDTO.getNomProduit());
+        produit.setPrixProduit(produitDTO.getPrixProduit());
+        produit.setDateExpiration(produitDTO.getDateExpiration());
 
-        return Produit.builder()
-                .idProduit(produitDTO.getIdProduit())
-                .nomProduit(produitDTO.getNomProduit())
-                .prixProduit(produitDTO.getPrixProduit())
-                .dateExpiration(produitDTO.getDateExpiration())
-                .category(category)
-                .build();
+        if (produitDTO.getCategoryId() != null) {
+            Category category = categoryRepository.findById(produitDTO.getCategoryId())
+                    .orElse(null);
+            produit.setCategory(category);
+        }
+
+        return produit;
     }
 }

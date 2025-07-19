@@ -1,7 +1,10 @@
 package tchos.gesprod.category;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,14 +44,23 @@ public class CategoryController {
     // Enregistrer une nouvelle catégorie
     @PostMapping
     @Operation(summary = "Enregistrer une nouvelle catégorie")
-    public ResponseEntity<CategoryDTO> createCategory(@RequestBody CategoryDTO categoryDTO) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(categoryService.createCategory(categoryDTO));
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Catégorie créée avec succès"),
+            @ApiResponse(responseCode = "400", description = "Catégorie déjà existante")
+    })
+    public ResponseEntity<Category> createCategory(@Valid @RequestBody CategoryDTO categoryDTO) {
+        Category created = categoryService.createCategoryWithBuilder(categoryDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
     // Mettre à jour une catégorie existante
     @PutMapping("/{id}")
     @Operation(summary = "Mettre à jour une catégorie existante")
-    public ResponseEntity<CategoryDTO> updateCategory(@PathVariable UUID id, @RequestBody CategoryDTO categoryDTO) {
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Catégorie mise à jour avec succès"),
+            @ApiResponse(responseCode = "400", description = "Catégorie déjà existante")
+    })
+    public ResponseEntity<CategoryDTO> updateCategory(@PathVariable UUID id, @Valid @RequestBody CategoryDTO categoryDTO) {
         return ResponseEntity.ok(categoryService.updateCategory(id, categoryDTO));
     }
 

@@ -1,7 +1,9 @@
 package tchos.gesprod.category;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -31,6 +33,31 @@ public class CategoryService {
     }
 
     // Créer une nouvelle catégorie
+    public Category createCategory(Category category) {
+        // Verifie si la catégorie existe déjà
+        if(categoryRepository.existsByNomCategoryIgnoreCase(category.getNomCategory())) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Cette catégorie existe déjà !");
+        }
+
+        // Crée une nouvelle instance indépendante
+        Category newCategory = new Category();
+        newCategory.setNomCategory(category.getNomCategory());
+
+        return categoryRepository.save(newCategory);
+    }
+
+    // Alternative avec Builder
+    public Category createCategoryWithBuilder(CategoryDTO categoryDTO) {
+        return categoryRepository.save(
+                Category.builder()
+                        .nomCategory(categoryDTO.getNomCategory())
+                        .build()
+        );
+    }
+
+    /**
     public CategoryDTO createCategory(CategoryDTO categoryDTO) {
         // Verifie si la catégorie existe déjà
         if(categoryRepository.existsDistinctByNomCategory(categoryDTO.getNomCategory())) {
@@ -40,7 +67,7 @@ public class CategoryService {
         Category category = categoryMapper.toEntity(categoryDTO);
         Category savedCategory = categoryRepository.save(category);
         return categoryMapper.toDTO(savedCategory);
-    }
+    }*/
 
     /* Mettre à jour les informations sur une
         catégorie (existingCategory) déja existante */

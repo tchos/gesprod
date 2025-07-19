@@ -10,7 +10,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 public class CategoryDTO {
-    private UUID idCategory;
+    private UUID id;
 
     @Size(min = 3, max = 48, message = "{Size.category.nomCategory}")
     private String nomCategory;

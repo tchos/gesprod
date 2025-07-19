@@ -8,6 +8,6 @@ import java.util.UUID;
 
 @Repository
 public interface ProduitRepository extends JpaRepository<Produit, UUID> {
-    boolean existsDistinctByNomProduit(String nomProduit);
-    List<Produit> findByCategory(UUID categoryId);
+    boolean existsByNomProduitIgnoreCase(String nomProduit);
+    List<Produit> findByCategoryId(UUID categoryId);
 }
