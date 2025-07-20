@@ -49,7 +49,7 @@ public class ProduitService {
     // Enregistrer un nouveau produit à partir d'un DTO
     public ProduitDTO createProduit(ProduitDTO produitDTO) {
         // Verifie si le produit existe déjà
-        if(produitRepository.existsByNomProduitIgnoreCase(produitDTO.getNomProduit().trim().toLowerCase())) {
+        if(produitRepository.existsByNomProduitIgnoreCase(produitDTO.getNomProduit())) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
                     "Ce produit existe déjà en BD !");
@@ -83,7 +83,8 @@ public class ProduitService {
                     if (updatedProduitDTO.getCategoryId() != null) {
                         existingProduit.setCategory(
                                 categoryRepository.findById(updatedProduitDTO.getCategoryId())
-                                        .orElseThrow(() -> new IllegalArgumentException("Catégorie non existante !"))
+                                        .orElseThrow(()
+                                                -> new IllegalArgumentException("Catégorie non existante !"))
                         );
                     }
 

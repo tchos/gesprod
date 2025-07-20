@@ -13,6 +13,7 @@ public class ProduitMapper {
     private final CategoryRepository categoryRepository;
 
     public ProduitDTO toDTO(Produit produit) {
+        //Méthode 1: En utilisant le builder
         return ProduitDTO.builder()
                 .id(produit.getId())
                 .nomProduit(produit.getNomProduit())
@@ -23,6 +24,7 @@ public class ProduitMapper {
     }
 
     public Produit toEntity(ProduitDTO produitDTO) {
+        //Méthode 2: En créant une nouvelle instance de l'entité
         Produit produit = new Produit();
         produit.setId(produitDTO.getId());
         produit.setNomProduit(produitDTO.getNomProduit());

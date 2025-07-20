@@ -28,7 +28,9 @@ public class CategoryService {
     // Recupere une catégorie par son ID
     public CategoryDTO getCategoryByID(UUID id) {
         Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Categorie non existente !"));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST,
+                        "Categorie non existente !"));
         return categoryMapper.toDTO(category);
     }
 
@@ -86,7 +88,9 @@ public class CategoryService {
     public void deleteCategory(UUID id) {
         // Si la catégorie à supprimer n'existe pas il faut afficher un message
         if(!categoryRepository.existsById(id)) {
-            throw new IllegalArgumentException("Categorie non existente !");
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Categorie non existente !");
         }
         categoryRepository.deleteById(id);
     }
