@@ -1,5 +1,6 @@
-package tchos.gesprod.auth;
+package tchos.gesprod.security;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,10 +10,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class RegisterRequest {
-    private String firstname;
-    private String lastname;
+public class AuthRequest {
+    @NotNull
     private String email;
-    private String password;
-    private UserRole role;
+    @NotNull private String password;
 }

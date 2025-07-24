@@ -1,4 +1,4 @@
-package tchos.gesprod.auth;
+package tchos.gesprod.security;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -26,14 +26,20 @@ public class User implements UserDetails {
     @GeneratedValue
     private UUID id;
 
+    @Column(nullable = false)
+    private String firstname;
+
+    @Column(nullable = false)
+    private String lastname;
+
     @Column(nullable = false, unique = true)
     private String email;
 
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false)
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
 
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + this.role));

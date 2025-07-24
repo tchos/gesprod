@@ -1,4 +1,4 @@
-package tchos.gesprod.auth;
+package tchos.gesprod.security;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AuthenticationResponse {
+public class AuthResponse {
     private String token;
 }

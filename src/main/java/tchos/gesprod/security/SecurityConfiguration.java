@@ -1,10 +1,9 @@
-package tchos.gesprod.config;
+package tchos.gesprod.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -17,7 +16,7 @@ import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import tchos.gesprod.auth.JwtAuthenticationFilter;
+import tchos.gesprod.security.JwtAuthenticationFilter;
 
 import java.util.List;
 
@@ -52,10 +51,7 @@ public class SecurityConfiguration {
                     .logout(e -> e
                             .logoutUrl("/api/auth/logout")
                             .addLogoutHandler(logoutHandler)
-                            .logoutSuccessHandler(
-                                    (req,
-                                     res,
-                                     auth) -> SecurityContextHolder.clearContext())
+                            .logoutSuccessHandler((req, res, auth) -> SecurityContextHolder.clearContext())
                     );
 
             return http.build();
@@ -75,37 +71,3 @@ public class SecurityConfiguration {
         return source;
     }
 }
-
-
-
-
-
-
-/* Activer ceci en attendant de gerer la securitte du projet et de permettre à SWAGGER de fonctionner.
-@Configuration
-@EnableWebSecurity
-@RequiredArgsConstructor
-public class SecurityConfiguration {
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(csrf -> csrf.disable()) // Désactive CSRF pour les API REST
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                "/api/auth/**", // Autorise les endpoints d'authentification
-                                "/swagger-ui/**", // Autorise Swagger UI
-                                "/v3/api-docs/**", // Autorise la documentation OpenAPI
-                                "/swagger-resources/**",
-                                "/swagger-ui.html",
-                                "/webjars/**",
-                                "/h2-console/**"
-                        ).permitAll() // Autorise ces chemins sans authentification
-                        .anyRequest().authenticated() // Tous les autres endpoints nécessitent une authentification
-                )
-                .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .httpBasic(Customizer.withDefaults()); // Active l'authentification Basic pour Swagger
-
-        return http.build();
-    }
-}
-*/
