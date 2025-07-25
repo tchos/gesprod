@@ -1,4 +1,4 @@
-package tchos.gesprod.security;
+package tchos.gesprod.auth;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

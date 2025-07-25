@@ -1,4 +1,4 @@
-package tchos.gesprod.security;
+package tchos.gesprod.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,4 +1,4 @@
-package tchos.gesprod.security;
+package tchos.gesprod.auth;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -16,7 +16,6 @@ import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import tchos.gesprod.security.JwtAuthenticationFilter;
 
 import java.util.List;
 

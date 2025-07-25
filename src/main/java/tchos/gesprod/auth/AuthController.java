@@ -1,4 +1,4 @@
-package tchos.gesprod.security;
+package tchos.gesprod.auth;
 
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -8,9 +8,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import tchos.gesprod.security.AuthRequest;
-import tchos.gesprod.security.AuthResponse;
-import tchos.gesprod.security.AuthService;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -19,6 +16,11 @@ import tchos.gesprod.security.AuthService;
 public class AuthController {
 
     private final AuthService authService;
+
+    @GetMapping("/test")
+    public String test() {
+        return "Controller works!";
+    }
 
     @PostMapping("/register")
     @Operation(
@@ -30,8 +32,8 @@ public class AuthController {
                     @ApiResponse(responseCode = "200", description = "Compte créé avec succès")
             }
     )
-    public AuthResponse register(@Valid @RequestBody RegisterRequest registerRequest) {
-        return authService.register(registerRequest);
+    public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest registerRequest) {
+        return ResponseEntity.ok(authService.register(registerRequest));
     }
 
     @PostMapping("/login")

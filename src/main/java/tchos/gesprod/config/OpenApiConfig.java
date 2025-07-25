@@ -14,9 +14,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @OpenAPIDefinition(
         info = @Info(
-                contact = @Contact(name = "Geek Institut", email = "info@geekinstitut.com", url = "https://geekinstitut.com"),
-                description = "OpenAPI documentation for Smart Geek Money",
-                title = "OpenAPI Specification - Smart Geek Money",
+                contact = @Contact(name = "Store Enterprise", email = "kwenol@yahoo.fr", url = "https://store.cm"),
+                description = "OpenAPI documentation for GesProd",
+                title = "OpenAPI Specification - Store GesProd",
                 version = "1.0"
         ),
         servers = {@Server(description = "Local ENV", url = "http://localhost:8080")},
