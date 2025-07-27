@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 @OpenAPIDefinition(
         info = @Info(
                 contact = @Contact(
-                        name = "Store Enterprise",
+                        name = "Store Enterprise API",
                         email = "kwenol@yahoo.fr",
                         url = "https://store.cm"
                 ),
