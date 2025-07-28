@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,6 +18,7 @@ import java.util.UUID;
 @RequestMapping("/api/category")
 @RequiredArgsConstructor
 @Tag(name = "Catégories", description = "API pour la gestion des catégories")
+@PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'USER')")
 public class CategoryController {
 
     private final CategoryService categoryService;

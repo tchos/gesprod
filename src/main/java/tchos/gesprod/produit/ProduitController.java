@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import tchos.gesprod.category.CategoryService;
 
@@ -18,6 +19,7 @@ import java.util.UUID;
 @RequestMapping("/api/product")
 @RequiredArgsConstructor
 @Tag(name = "Produits", description = "API pour la gestion des produits")
+@PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'USER')")
 public class ProduitController {
 
     private final ProduitService produitService;
