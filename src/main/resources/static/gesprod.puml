@@ -1,0 +1,25 @@
+@startuml
+
+package "model" {
+
+  class Produit {
+    - id: UUID
+    - nomProduit: String
+    - prixProduit: Integer
+    - dateExpiration: LocalDate
+    --
+    +category: Category
+  }
+
+  class Category {
+    - id: String
+    - nomCategory: String
+    --
+    +produits: List<Produit>
+  }
+
+' Relations
+  Category "1" --> "*" Produit: Appartient
+}
+
+@enduml
