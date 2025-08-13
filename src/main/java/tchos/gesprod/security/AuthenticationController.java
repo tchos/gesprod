@@ -66,5 +66,4 @@ public class AuthenticationController {
         logoutService.logout(request, response, authentication);
         return ResponseEntity.ok("Déconnexion réussie !");
     }
-
 }

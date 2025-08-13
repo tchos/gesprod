@@ -27,6 +27,8 @@ public class ApplicationConfig {
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
+        /* Le DaoAuthenticationProvider utilise le UserDetailsService
+        et le PasswordEncoder pour vérifier les identifiants de l'utilisateur. */
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsService());
         authProvider.setPasswordEncoder(passwordEncoder());
@@ -44,6 +46,8 @@ public class ApplicationConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
+        /* encoder les mots de passe avant de les enregistrer
+        et pour les comparer lors de la connexion. */
         return new BCryptPasswordEncoder();
     }
 }
