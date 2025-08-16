@@ -11,5 +11,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AuthenticationResponse {
-    private String token;
+    private String token;  // JWT (peut être null si compte non activé)
+    private String message; // Message de statut
+
+    // Exemple de constructeur pour les réponses sans token
+    public static AuthenticationResponse withMessage(String message) {
+        return AuthenticationResponse.builder()
+                .message(message)
+                .build();
+    }
 }

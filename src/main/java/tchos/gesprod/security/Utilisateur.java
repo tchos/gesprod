@@ -29,6 +29,8 @@ public class Utilisateur implements UserDetails {
     private String lastname;
     private String email;
     private String password;
+    @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
+    private boolean enabled;
 
     @Enumerated(EnumType.STRING)
     private Role role;
@@ -37,6 +39,9 @@ public class Utilisateur implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + this.role));
     }
+
+    @Override
+    public boolean isEnabled() { return enabled; }
 
     @Override
     public String getUsername() {

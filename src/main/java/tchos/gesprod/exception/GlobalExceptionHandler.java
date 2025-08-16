@@ -83,4 +83,15 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(Map.of("error", "Erreur interne du serveur"));
     }
+
+    // Pour gérer les cas des user qui essayent de se connecter alors que leur compte n'est toujours pas activé.
+    @ExceptionHandler(AccountNotActivatedException.class)
+    public ResponseEntity<Map<String, Object>> handleAccountNotActivatedException(AccountNotActivatedException ex) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status", HttpStatus.FORBIDDEN.value());
+        body.put("error", "Compte non activé");
+        body.put("message", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(body);
+    }
 }
